@@ -1,0 +1,15 @@
+{
+  "file_format_version": "1.0.0",
+  "layer": {
+    "name": "CallbackSwapchain",
+    "type": "GLOBAL",
+    "library_path": "./${SWAPCHAIN_LIBRARY_NAME}",
+    "api_version": "1.0.5",
+    "implementation_version": "1",
+    "description": "Callback Swapchain Layer",
+    "functions": {
+      "vkGetDeviceProcAddr": "CallbackSwapchainGetDeviceProcAddr",
+      "vkGetInstanceProcAddr": "CallbackSwapchainGetInstanceProcAddr"
+    }
+  }
+}
