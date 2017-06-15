@@ -24,7 +24,9 @@ endif()
 set(VULKAN_INCLUDE_LOCATION ${VULKAN_INCLUDE_LOCATION}
     CACHE STRING "Location of the Vulkan headers")
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-rtti -fno-exceptions")
+if (NOT MSVC)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-rtti -fno-exceptions")
+endif()
 
 add_library(VkLayer_CallbackSwapchain
   SHARED
