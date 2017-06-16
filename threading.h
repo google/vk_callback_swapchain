@@ -32,9 +32,9 @@ namespace swapchain {
 namespace threading {
 
 class mutex {
-public:
-  mutex(const mutex &) = delete;
-  mutex &operator=(const mutex &) = delete;
+ public:
+  mutex(const mutex&) = delete;
+  mutex& operator=(const mutex&) = delete;
   mutex() {
 #ifdef _WIN32
     InitializeCriticalSection(&mutex_);
@@ -68,12 +68,12 @@ public:
   }
 
 #ifdef _WIN32
-  CRITICAL_SECTION &native_handle() { return mutex_; }
+  CRITICAL_SECTION& native_handle() { return mutex_; }
 #else
-  pthread_mutex_t &native_handle() { return mutex_; }
+  pthread_mutex_t& native_handle() { return mutex_; }
 #endif
 
-private:
+ private:
 #ifdef _WIN32
   CRITICAL_SECTION mutex_;
 #else
@@ -84,9 +84,9 @@ private:
 enum class cv_status { timeout, no_timeout };
 
 class condition_variable {
-public:
-  condition_variable(const condition_variable &) = delete;
-  condition_variable &operator=(const condition_variable &) = delete;
+ public:
+  condition_variable(const condition_variable&) = delete;
+  condition_variable& operator=(const condition_variable&) = delete;
   condition_variable() {
 #ifdef _WIN32
     InitializeConditionVariable(&condition_);
@@ -102,13 +102,14 @@ public:
 #endif
   }
   template <class Rep, class Period>
-  cv_status wait_for(std::unique_lock<mutex> &lock,
-                     const std::chrono::duration<Rep, Period> &rel_time) {
-    auto &native_handle = lock.mutex()->native_handle();
+  cv_status wait_for(std::unique_lock<mutex>& lock,
+                     const std::chrono::duration<Rep, Period>& rel_time) {
+    auto& native_handle = lock.mutex()->native_handle();
 #ifdef _WIN32
     auto time =
         std::chrono::duration_cast<std::chrono::milliseconds>(rel_time).count();
-    return (0 != SleepConditionVariableCS(&condition_, &native_handle, time))
+    return (0 != SleepConditionVariableCS(&condition_, &native_handle,
+                                          static_cast<DWORD>(time)))
                ? cv_status::no_timeout
                : cv_status::timeout;
 #else
@@ -126,8 +127,8 @@ public:
 #endif
   }
 
-  void wait(std::unique_lock<mutex> &lock) {
-    auto &native_handle = lock.mutex()->native_handle();
+  void wait(std::unique_lock<mutex>& lock) {
+    auto& native_handle = lock.mutex()->native_handle();
 #ifdef _WIN32
     SleepConditionVariableCS(&condition_, &native_handle, INFINITE);
 #else
@@ -151,14 +152,13 @@ public:
 #endif
   }
 
-private:
+ private:
 #ifdef _WIN32
   CONDITION_VARIABLE condition_;
 #else
   pthread_cond_t condition_;
 #endif
 };
-
 }
 }
-#endif // VK_CALLBACK_SWAPCHAIN_THREADING_H_
+#endif  // VK_CALLBACK_SWAPCHAIN_THREADING_H_

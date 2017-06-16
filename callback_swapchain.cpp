@@ -31,7 +31,8 @@ namespace {
 int32_t FindMemoryType(
     const VkPhysicalDeviceMemoryProperties* memory_properties,
     uint32_t memoryTypeBits, VkMemoryPropertyFlags properties) {
-  for (int32_t i = 0; i < memory_properties->memoryTypeCount; ++i) {
+  for (int32_t i = 0;
+       i < static_cast<int32_t>(memory_properties->memoryTypeCount); ++i) {
     if ((memoryTypeBits & (1 << i)) &&
         ((memory_properties->memoryTypes[i].propertyFlags & properties) ==
          properties))
