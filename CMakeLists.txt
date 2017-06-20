@@ -45,9 +45,16 @@ if(NOT "${VULKAN_INCLUDE_LOCATION}" STREQUAL "")
 endif()
 
 set(SWAPCHAIN_LIBRARY_NAME "${CMAKE_SHARED_LIBRARY_PREFIX}VkLayer_CallbackSwapchain${CMAKE_SHARED_LIBRARY_SUFFIX}")
+set(output_dir ${CMAKE_CURRENT_BINARY_DIR})
 set(output_file CallbackSwapchainLayer.json)
 if (CMAKE_LIBRARY_OUTPUT_DIRECTORY)
-    set(output_file ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/CallbackSwapchainLayer.json)
+    set(output_dir ${CMAKE_LIBRARY_OUTPUT_DIRECTORY})
 endif()
 configure_file(CallbackSwapchainLayer.json
-    ${output_file})
+    ${output_dir}/${output_file})
+if (CMAKE_CFG_INTDIR)
+    add_custom_command(TARGET VkLayer_CallbackSwapchain
+	    POST_BUILD
+	    COMMAND ${CMAKE_COMMAND} -E copy ${output_dir}/${output_file}
+	        ${output_dir}/${CMAKE_CFG_INTDIR}/${output_file})
+endif()
