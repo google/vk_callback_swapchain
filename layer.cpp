@@ -29,6 +29,16 @@
 
 #define LAYER_NAME_FUNCTION(fn) CallbackSwapchain##fn
 
+
+#if defined (_WIN32)
+#define CALLBACK_LAYER_EXPORT  __declspec(dllexport)
+#elif defined(__GNUC__) && __GNUC__ >= 4
+#define CALLBACK_LAYER_EXPORT __attribute__((visibility("default")))
+#else
+#define CALLBACK_LAYER_EXPORT
+#endif
+
+
 namespace swapchain {
 
 Context& GetGlobalContext() {
@@ -308,13 +318,13 @@ VkResult get_layer_properties(uint32_t* pCount,
   return VK_SUCCESS;
 }
 
-VK_LAYER_EXPORT VKAPI_ATTR VkResult VKAPI_CALL
+CALLBACK_LAYER_EXPORT VKAPI_ATTR VkResult VKAPI_CALL
 vkEnumerateInstanceLayerProperties(uint32_t* pCount,
                                    VkLayerProperties* pProperties) {
   return get_layer_properties(pCount, pProperties);
 }
 
-VK_LAYER_EXPORT VKAPI_ATTR VkResult VKAPI_CALL vkEnumerateDeviceLayerProperties(
+CALLBACK_LAYER_EXPORT VKAPI_ATTR VkResult VKAPI_CALL vkEnumerateDeviceLayerProperties(
     VkPhysicalDevice, uint32_t* pCount, VkLayerProperties* pProperties) {
   return get_layer_properties(pCount, pProperties);
 }
@@ -397,7 +407,7 @@ void vkFreeCommandBuffers(VkDevice device, VkCommandPool commandPool,
       device, commandPool, commandBufferCount, pCommandBuffers);
 }
 
-VK_LAYER_EXPORT VKAPI_ATTR VkResult VKAPI_CALL
+CALLBACK_LAYER_EXPORT VKAPI_ATTR VkResult VKAPI_CALL
 vkEnumerateInstanceExtensionProperties(const char* /*pLayerName*/,
                                        uint32_t* pCount,
                                        VkExtensionProperties* /*pProperties*/) {
@@ -517,12 +527,12 @@ extern "C" {
 // and GetInstanceProcAddr must be ${layer_name}/Get*ProcAddr.
 // This is a bit surprising given that we *MUST* also export
 // vkEnumerate*Layers without any prefix.
-VK_LAYER_EXPORT VKAPI_ATTR PFN_vkVoidFunction VKAPI_CALL
+	CALLBACK_LAYER_EXPORT VKAPI_ATTR PFN_vkVoidFunction VKAPI_CALL
 LAYER_NAME_FUNCTION(GetDeviceProcAddr)(VkDevice dev, const char* funcName) {
   return swapchain::vkGetDeviceProcAddr(dev, funcName);
 }
 
-VK_LAYER_EXPORT VKAPI_ATTR PFN_vkVoidFunction VKAPI_CALL LAYER_NAME_FUNCTION(
+CALLBACK_LAYER_EXPORT VKAPI_ATTR PFN_vkVoidFunction VKAPI_CALL LAYER_NAME_FUNCTION(
     GetInstanceProcAddr)(VkInstance instance, const char* funcName) {
   return swapchain::vkGetInstanceProcAddr(instance, funcName);
 }
@@ -531,7 +541,7 @@ VK_LAYER_EXPORT VKAPI_ATTR PFN_vkVoidFunction VKAPI_CALL LAYER_NAME_FUNCTION(
 // These 4 function must be defined in order for this to even
 // be considered for loading.
 #if defined(__ANDROID__)
-VK_LAYER_EXPORT VKAPI_ATTR VkResult VKAPI_CALL
+CALLBACK_LAYER_EXPORT VKAPI_ATTR VkResult VKAPI_CALL
 vkEnumerateInstanceLayerProperties(uint32_t* pCount,
                                    VkLayerProperties* pProperties) {
   return swapchain::vkEnumerateInstanceLayerProperties(pCount, pProperties);
@@ -539,14 +549,14 @@ vkEnumerateInstanceLayerProperties(uint32_t* pCount,
 
 // On Android this must also be defined, even if we have 0
 // layers to expose.
-VK_LAYER_EXPORT VKAPI_ATTR VkResult VKAPI_CALL
+CALLBACK_LAYER_EXPORT VKAPI_ATTR VkResult VKAPI_CALL
 vkEnumerateInstanceExtensionProperties(const char* pLayerName, uint32_t* pCount,
                                        VkExtensionProperties* pProperties) {
   return swapchain::vkEnumerateInstanceExtensionProperties(pLayerName, pCount,
                                                            pProperties);
 }
 
-VK_LAYER_EXPORT VKAPI_ATTR VkResult VKAPI_CALL vkEnumerateDeviceLayerProperties(
+CALLBACK_LAYER_EXPORT VKAPI_ATTR VkResult VKAPI_CALL vkEnumerateDeviceLayerProperties(
     VkPhysicalDevice physicalDevice, uint32_t* pCount,
     VkLayerProperties* pProperties) {
   return swapchain::vkEnumerateDeviceLayerProperties(physicalDevice, pCount,
@@ -555,7 +565,7 @@ VK_LAYER_EXPORT VKAPI_ATTR VkResult VKAPI_CALL vkEnumerateDeviceLayerProperties(
 
 // On Android this must also be defined, even if we have 0
 // layers to expose.
-VK_LAYER_EXPORT VKAPI_ATTR VkResult VKAPI_CALL
+CALLBACK_LAYER_EXPORT VKAPI_ATTR VkResult VKAPI_CALL
 vkEnumerateDeviceExtensionProperties(VkPhysicalDevice physicalDevice,
                                      const char* pLayerName, uint32_t* pCount,
                                      VkExtensionProperties* pProperties) {
