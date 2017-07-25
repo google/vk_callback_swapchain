@@ -21,17 +21,17 @@
 
 namespace swapchain {
 
-void RegisterInstance(VkInstance instance, const InstanceData& data) {
+void RegisterInstance(VkInstance instance, InstanceData& data) {
   uint32_t num_devices = 0;
   data.vkEnumeratePhysicalDevices(instance, &num_devices, nullptr);
 
-  std::vector<VkPhysicalDevice> physical_devices(num_devices);
+  data.physical_devices_.resize(num_devices);
   data.vkEnumeratePhysicalDevices(instance, &num_devices,
-                                  physical_devices.data());
+                                  data.physical_devices_.data());
 
   auto physical_device_map = GetGlobalContext().GetPhysicalDeviceMap();
 
-  for (VkPhysicalDevice physical_device : physical_devices) {
+  for (VkPhysicalDevice physical_device : data.physical_devices_) {
     PhysicalDeviceData dat{instance};
     data.vkGetPhysicalDeviceMemoryProperties(physical_device,
                                              &dat.memory_properties_);

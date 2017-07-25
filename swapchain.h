@@ -22,7 +22,7 @@ namespace swapchain {
 
 // RegisterInstance set up all of the swapchain related physical
 // device data associated with an instance.
-void RegisterInstance(VkInstance instance, const InstanceData &data);
+void RegisterInstance(VkInstance instance, InstanceData& data);
 
 // All of the following functions are the same as the Vulkan functions
 // with the same names. vkCreateCallbackSurface can be used interchangeably
