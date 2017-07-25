@@ -157,7 +157,8 @@ VKAPI_ATTR VkResult VKAPI_CALL vkCreateInstance(
     (*instances)[*pInstance] = data;
   }
 
-  RegisterInstance(*pInstance, data);
+  RegisterInstance(*pInstance,
+                   (*GetGlobalContext().GetInstanceMap())[*pInstance]);
   return result;
 }
 
