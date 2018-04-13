@@ -20,6 +20,7 @@
 #include "layer.h"
 #include <atomic>
 #include <deque>
+#include <functional>
 #include <mutex>
 #include <vulkan/vulkan.h>
 
