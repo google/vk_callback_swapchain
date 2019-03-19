@@ -54,10 +54,12 @@ provided.
 
 # Building
 This project is a standard CMake project.
-Example using ninja.
+Example using [ninja](https://ninja-build.org/):
 
 ```
-CMake <path_to_source>
+mkdir build
+cd build
+cmake -GNinja ..
 cmake --build .
 ```
 
