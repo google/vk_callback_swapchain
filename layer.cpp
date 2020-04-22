@@ -273,11 +273,11 @@ vkCreateDevice(VkPhysicalDevice gpu, const VkDeviceCreateInfo* pCreateInfo,
   {
     auto queue_map = GetGlobalContext().GetQueueMap();
     for (size_t i = 0; i < pCreateInfo->queueCreateInfoCount; ++i) {
+      auto queue_family_index = pCreateInfo->pQueueCreateInfos[i].queueFamilyIndex;
       for (size_t j = 0; j < pCreateInfo->pQueueCreateInfos[i].queueCount;
            ++j) {
         VkQueue q;
-        data.vkGetDeviceQueue(
-            *pDevice, pCreateInfo->pQueueCreateInfos[i].queueCount, j, &q);
+        data.vkGetDeviceQueue(*pDevice, queue_family_index, j, &q);
         (*queue_map)[q] = {*pDevice, data.vkQueueSubmit};
       }
     }
