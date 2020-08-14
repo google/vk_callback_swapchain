@@ -224,6 +224,10 @@ VKAPI_ATTR void VKAPI_CALL vkSetSwapchainCallback(VkSwapchainKHR swapchain,
                                                   void callback(void*, uint8_t*,
                                                                 size_t),
                                                   void* user_data) {
+  // RenderDoc Wraps the swapchain so need to get the original one here.
+  if (getenv("ENABLE_VULKAN_RENDERDOC_CAPTURE")) {
+    swapchain = *reinterpret_cast<VkSwapchainKHR*>(swapchain);
+  }
   CallbackSwapchain* swp = reinterpret_cast<CallbackSwapchain*>(swapchain);
   swp->SetCallback(callback, user_data);
 }
