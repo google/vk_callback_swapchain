@@ -28,6 +28,7 @@ vkQueuePresentKHR
 vkDestroySurfaceKHR
 vkCreateAndroidSurfaceKHR
 vkCreateMirSurfaceKHR
+vkCreateStreamDescriptorSurfaceGGP
 vkCreateWaylandSurfaceKHR
 vkCreateWin32SurfaceKHR
 vkCreateXcbSurfaceKHR

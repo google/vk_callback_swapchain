@@ -473,6 +473,7 @@ vkGetInstanceProcAddr(VkInstance instance, const char* funcName) {
   // Intercept all of the surface creation routines for all platforms.
   INTERCEPT_SURFACE(vkCreateAndroidSurfaceKHR);
   INTERCEPT_SURFACE(vkCreateMirSurfaceKHR);
+  INTERCEPT_SURFACE(vkCreateStreamDescriptorSurfaceGGP);
   INTERCEPT_SURFACE(vkCreateWaylandSurfaceKHR);
   INTERCEPT_SURFACE(vkCreateWin32SurfaceKHR);
   INTERCEPT_SURFACE(vkCreateXcbSurfaceKHR);
