@@ -14,6 +14,9 @@
  * limitations under the License.
  */
 
+#include <vulkan/vk_layer.h>
+#include <vulkan/vulkan.h>
+
 #include <cstdio>
 #include <cstring>
 #include <mutex>
@@ -21,8 +24,6 @@
 #include <unordered_map>
 #include <vector>
 
-#include <vulkan/vk_layer.h>
-#include <vulkan/vulkan.h>
 #include "swapchain.h"
 
 #define LAYER_NAME "CallbackSwapchain"
@@ -273,8 +274,9 @@ vkCreateDevice(VkPhysicalDevice gpu, const VkDeviceCreateInfo* pCreateInfo,
   {
     auto queue_map = GetGlobalContext().GetQueueMap();
     for (size_t i = 0; i < pCreateInfo->queueCreateInfoCount; ++i) {
-      auto queue_family_index = pCreateInfo->pQueueCreateInfos[i].queueFamilyIndex;
-      for (size_t j = 0; j < pCreateInfo->pQueueCreateInfos[i].queueCount;
+      auto queue_family_index =
+          pCreateInfo->pQueueCreateInfos[i].queueFamilyIndex;
+      for (uint32_t j = 0; j < pCreateInfo->pQueueCreateInfos[i].queueCount;
            ++j) {
         VkQueue q;
         data.vkGetDeviceQueue(*pDevice, queue_family_index, j, &q);
@@ -362,7 +364,8 @@ vkEnumeratePhysicalDevices(VkInstance instance, uint32_t* pPhysicalDeviceCount,
     }
   }
 
-  uint32_t count = instance_data->physical_devices_.size();
+  uint32_t count =
+      static_cast<uint32_t>(instance_data->physical_devices_.size());
   if (pPhysicalDevices) {
     if (*pPhysicalDeviceCount > count) *pPhysicalDeviceCount = count;
     memcpy(pPhysicalDevices, instance_data->physical_devices_.data(),

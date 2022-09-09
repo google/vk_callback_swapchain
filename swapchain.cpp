@@ -15,8 +15,10 @@
  */
 
 #include "swapchain.h"
+
 #include <cassert>
 #include <vector>
+
 #include "callback_swapchain.h"
 
 namespace swapchain {
@@ -171,8 +173,8 @@ VKAPI_ATTR VkResult VKAPI_CALL vkCreateSwapchainKHR(
   inst_dat.vkGetPhysicalDeviceQueueFamilyProperties(
       dev_dat.physicalDevice, &property_count, queue_properties.data());
 
-  size_t queue = 0;
-  for (; queue < queue_properties.size(); ++queue) {
+  uint32_t queue = 0;
+  for (; queue < static_cast<uint32_t>(queue_properties.size()); ++queue) {
     if (queue_properties[queue].queueFlags & VK_QUEUE_GRAPHICS_BIT) break;
   }
 
@@ -203,13 +205,13 @@ VKAPI_ATTR VkResult VKAPI_CALL vkGetSwapchainImagesKHR(
   const auto images =
       swp->GetImages(*pSwapchainImageCount, pSwapchainImages != nullptr);
   if (!pSwapchainImages) {
-    *pSwapchainImageCount = images.size();
+    *pSwapchainImageCount = static_cast<uint32_t>(images.size());
     return VK_SUCCESS;
   }
 
   VkResult res = VK_INCOMPLETE;
   if (*pSwapchainImageCount >= images.size()) {
-    *pSwapchainImageCount = images.size();
+    *pSwapchainImageCount = static_cast<uint32_t>(images.size());
     res = VK_SUCCESS;
   }
 
